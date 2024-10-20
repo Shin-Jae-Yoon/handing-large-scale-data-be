@@ -1,9 +1,11 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: # 추후 공지
-    password: # 추후 공지
-    url: # 추후 공지
+    username: ${DB_USER_ID}
+    password: ${DB_PASSWORD}
+    url: jdbc:mysql://${DB_URL}/large-scale?socketTimeout=2000
+    hikari:
+      connection-timeout: 3000
   jpa:
     show-sql: true
     hibernate:
@@ -12,3 +14,19 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+
+  # datasource url structure
+  # jdbc:mysql://[URL]/[Database]?[settings]
+
+  # socketTimeout setting
+  # -> 데이터베이스의 쿼리 시간 제한
+  #    socketTimeout 초과한다면, 쿼리에 문제가 있다고 판단하고
+  #    이것을 기반으로 쿼리 성능 개선이나 모니터링을 하겠다는 근거가 생김
+  #    보수적으로 잡는 것을 권장
+  #
+  # -> 시간이 오래 걸리는 쿼리가 굳이굳이 필요한 상황이라면,
+  #    별도의 커넥션을 뚫어서 socketTimeout 크게 한 상태로 나눠서도 가능
+
+  # hikariCP connection-timeout
+  # -> 연결을 생성하는 것에 관한 제한시간
+  # -> 시간 초과 시, DB 네트워크 접속에 대한 문제가 있다고 판단
